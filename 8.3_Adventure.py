@@ -6,3 +6,6 @@ ADVENTURE PROGRAM
 3.) Expand your program to make it a real adventure game
 
 '''
+room_list = []
+room = ["ROOM DESCRIPTION"]
+room_list.append(room)
