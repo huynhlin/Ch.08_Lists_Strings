@@ -50,7 +50,6 @@ TEXT FORMATTING:
      '''
 score = 41237
 highscore = 1023407
-print("Score:      {:,}".format(score))
-print("High score: {:,}".format(highscore))
-
+print("Score:{:16,}".format(score))
+print("High score:{:11,}".format(highscore))
 

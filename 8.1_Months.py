@@ -9,7 +9,7 @@ Once the user quits, print "Goodbye!"
 done = False
 while not done:
     number = int(input("Enter a number 1-12 for a corresponding month, or an invalid number to exit the program."))
-    if number < 0 or number > 12:
+    if number < 1 or number > 12:
         done = True
         break
     months = "JanFebMarAprMayJunJulAugSepOctNovDec"
