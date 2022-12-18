@@ -271,7 +271,27 @@ dino = {
     "type": "Close Combat",
     "line": "\nThe dinosaur bit you!",
     "gold": 10,
-    "image": "",
+    "image":"\n            #############"
+            "\n           ##  ###########"
+            "\n           ###############"
+            "\n           ###############"
+            "\n           ###############"
+            "\n           #######"
+            "\n           ###########"
+            "\n#         ######"
+            "\n#       ########"
+            "\n##    ##########"
+            "\n###  #############"
+            "\n################ #"
+            "\n################"
+            "\n #############"
+            "\n  ############"
+            "\n   ##########"
+            "\n    ########"
+            "\n     ### ###"
+            "\n     ##   ##"
+            "\n     #    ##"
+            "\n     ##   ###",
     "low_health_image": "",
     "negotiable": False
 }
@@ -733,7 +753,7 @@ while not done:
                             brewing = False
                             brewing_unlocked = True
                             break
-                        print("Your bottles are in the order {}.".format(user_bottles))
+                        print("\nYour bottles are in the order {}.".format(user_bottles))
                         move = int(input("\nWhich bottle would you like to swap? Type 0 to give up."))
                         replacement = int(input("Bottle to swap with?"))
                         moveindex = move - 1
