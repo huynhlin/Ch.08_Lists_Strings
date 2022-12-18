@@ -207,8 +207,7 @@ def died(gold_lost):
         print("You will now be returned to your last save point.")
         breakflag = True
     except IndexError:
-        print("\nYou didn't save your data so you'll have to restart the game completely. Try utilizing a save room "
-              "next time!")
+        print("\nYou didn't save your data so you'll have to restart the game. Try utilizing a save room next time!")
         exit()
 
 
@@ -312,9 +311,49 @@ abyssal_being = {
 monsters = [zombie, bat, dino]
 
 
+def damage_taken():
+    global current_health
+    damage_reduction = int(round(stats[3] * 0.10))
+    enemy_damage = random.randint(monster["attack"] - 3, monster["attack"] + 3) - damage_reduction
+    current_health -= enemy_damage
+    print(monster["line"])
+    print("Your armor protected you from {} damage!".format(damage_reduction))
+    print("\nIt did {} damage to you!".format(enemy_damage))
+
+def win_check():  # checks if monster dead
+    global monster_health, fighting, in_battle, defeated, breakcheck
+    if monster_health < 1:
+        if debuffed:
+            stats[2] += def_decrease
+        print("\nYou defeated the {}!".format(monster["name"]))
+        gained_gold = random.randint(monster["gold"] - 3, monster["gold"] + 3)
+        print("You got \033[1;33m{}\033[0m gold from it!".format(gained_gold))
+        gold += gained_gold
+        fighting = False
+        in_battle = False
+        defeated = True
+        if floor > 10:
+            unique = monsters.index(abyssal_being)
+            monsters.pop(unique)
+        breakcheck = True
+
+
+def death_check():  # checks if user dead
+    global debuffed, def_decrease, fighting, dead, in_battle, breakcheck
+    if current_health < 1:
+        print("\nYou died!")
+        if debuffed:
+            stats[2] += def_decrease
+        fighting = False
+        dead = True
+        in_battle = False
+        gold_lost = random.randint(int(round((gold / 5) - 10)), int(round((gold / 5) + 10)))
+        died(gold_lost)
+        breakcheck = True
+
 
 def fight(monster):
-    global floor_multiplier, fighting, dead, weapon_attack, current_health, defeated, in_battle, gold
+    global floor_multiplier, fighting, dead, weapon_attack, current_health, defeated, in_battle, gold, breakcheck
     in_battle = True
     stun = False
     debuffed = False
@@ -326,32 +365,14 @@ def fight(monster):
         # stat check to update in case swapped weapon mid fight or something
         stats = [current_health, base_health, base_attack + weapon_attack + bonus_attack, base_defense + armor_defense +
                  bonus_defense, gold]
-        # checks if user dead or not lol
-        if current_health < 1:
-            print("\nYou died!")
-            if debuffed:
-                stats[2] += def_decrease
-            fighting = False
-            dead = True
-            in_battle = False
-            gold_lost = random.randint(int(round((gold / 5) - 10)), int(round((gold / 5) + 10)))
-            died(gold_lost)
+        death_check()
+        if breakcheck == True:
+            breakcheck = False
             break
-        if monster_health < 1:
-            if debuffed:
-                stats[2] += def_decrease
-            print("\nYou defeated the {}!".format(monster["name"]))
-            gained_gold = random.randint(monster["gold"] - 3, monster["gold"] + 3)
-            print("You got \033[1;33m{}\033[0m gold from it!".format(gained_gold))
-            gold += gained_gold
-            fighting = False
-            in_battle = False
-            defeated = True
-            if floor > 10:
-                unique = monsters.index(abyssal_being)
-                monsters.pop(unique)
+        win_check()
+        if breakcheck == True:
+            breakcheck = False
             break
-            # checks if monster is dead
         print("\nThe enemy has {} /".format(monster_health), "{} HP!".format(monster["health"]))
         print("You have {} /".format(current_health), "{} HP!".format(base_health))
         print("\n1) ATTACK")
@@ -383,70 +404,27 @@ def fight(monster):
             if not stun:
                 if monster == abyssal_being:
                     if not debuffed:
-                        if monster_health < 1:
-                            if debuffed:
-                                stats[2] += def_decrease
-                            print("\nYou defeated the {}!".format(monster["name"]))
-                            gained_gold = random.randint(monster["gold"] - 3, monster["gold"] + 3)
-                            print("You got \033[1;33m{}\033[0m gold from it!".format(gained_gold))
-                            gold += gained_gold
-                            fighting = False
-                            in_battle = False
-                            defeated = True
-                            if floor > 10:
-                                unique = monsters.index(abyssal_being)
-                                monsters.pop(unique)
+                        win_check()
+                        if breakcheck == True:
+                            breakcheck = False
                             break
-                            # checks if monster is dead before it attacks
                         print("\nThe abyssal being taunts you!")
                         print("Your DEFENSE decreased by 5!")
                         def_decrease = int(round(stats[3] * 0.15))
                         stats[2] -= def_decrease
                         debuffed = True
                     else:
-                        if monster_health < 1:
-                            if debuffed:
-                                stats[2] += def_decrease
-                            print("\nYou defeated the {}!".format(monster["name"]))
-                            gained_gold = random.randint(monster["gold"] - 3, monster["gold"] + 3)
-                            print("You got \033[1;33m{}\033[0m gold from it!".format(gained_gold))
-                            gold += gained_gold
-                            fighting = False
-                            in_battle = False
-                            defeated = True
-                            if floor > 10:
-                                unique = monsters.index(abyssal_being)
-                                monsters.pop(unique)
+                        win_check()
+                        if breakcheck == True:
+                            breakcheck = False
                             break
-                            # checks if monster is dead before it attacks
-                        damage_reduction = int(round(stats[3] * 0.10))
-                        enemy_damage = random.randint(monster["attack"] - 3, monster["attack"] + 3) - damage_reduction
-                        current_health -= enemy_damage
-                        print(monster["line"])
-                        print("Your armor protected you from {} damage!".format(damage_reduction))
-                        print("\nIt did {} damage to you!".format(enemy_damage))
+                        damage_taken()
                 else:
-                    if monster_health < 1:
-                        if debuffed:
-                            stats[2] += def_decrease
-                        print("\nYou defeated the {}!".format(monster["name"]))
-                        gained_gold = random.randint(monster["gold"] - 3, monster["gold"] + 3)
-                        print("You got \033[1;33m{}\033[0m gold from it!".format(gained_gold))
-                        gold += gained_gold
-                        fighting = False
-                        in_battle = False
-                        defeated = True
-                        if floor > 10:
-                            unique = monsters.index(abyssal_being)
-                            monsters.pop(unique)
+                    win_check()
+                    if breakcheck == True:
+                        breakcheck = False
                         break
-                        # checks if monster is dead before it attacks
-                    damage_reduction = int(round(stats[3] * 0.10))
-                    enemy_damage = random.randint(monster["attack"] - 3, monster["attack"] + 3) - damage_reduction
-                    current_health -= enemy_damage
-                    print(monster["line"])
-                    print("Your armor protected you from {} damage!".format(damage_reduction))
-                    print("\nIt did {} damage to you!".format(enemy_damage))
+                    damage_taken()
             else:
                 print("\nThe enemy was idle this turn!")
                 stun = False
@@ -457,27 +435,11 @@ def fight(monster):
                 stun = True
             else:
                 print("The enemy ignored you!")
-                if monster_health < 1:
-                    if debuffed:
-                        stats[2] += def_decrease
-                    print("\nYou defeated the {}!".format(monster["name"]))
-                    gained_gold = random.randint(monster["gold"] - 3, monster["gold"] + 3)
-                    print("You got \033[1;33m{}\033[0m gold from it!".format(gained_gold))
-                    gold += gained_gold
-                    fighting = False
-                    in_battle = False
-                    defeated = True
-                    if floor > 10:
-                        unique = monsters.index(abyssal_being)
-                        monsters.pop(unique)
+                win_check()
+                if breakcheck == True:
+                    breakcheck = False
                     break
-                    # checks if monster is dead before it attacks
-                damage_reduction = int(round(stats[3] * 0.10))
-                enemy_damage = random.randint(monster["attack"] - 3, monster["attack"] + 3) - damage_reduction
-                current_health -= enemy_damage
-                print(monster["line"])
-                print("Your armor protected you from {} damage!".format(damage_reduction))
-                print("\nIt did {} damage to you!".format(enemy_damage))
+                damage_taken()
         elif user_turn == 3:
             counter = 1
             try:
@@ -488,24 +450,12 @@ def fight(monster):
                 print("goddamnit")
             part = int(input("\nWhich weapon would you like to equip? 0 to cancel."))
             try:
-                if part == 1:
-                    weapon_inventory_adjust(0)
+                try:
+                    weapon_inventory_adjust(part - 1)
                     weapon_attack = equipped[0]["damage"]
-                elif part == 2:
-                    weapon_inventory_adjust(1)
-                    weapon_attack = equipped[0]["damage"]
-                elif part == 3:
-                    weapon_inventory_adjust(2)
-                    weapon_attack = equipped[0]["damage"]
-                elif part == 4:
-                    weapon_inventory_adjust(3)
-                    weapon_attack = equipped[0]["damage"]
-                elif part == 5:
-                    weapon_inventory_adjust(4)
-                    weapon_attack = equipped[0]["damage"]
-                else:
+                except IndexError:
                     print("That is not a valid option, try again.")
-            except IndexError:
+            except TypeError:
                 print("That is not a valid option, try again.")
         else:
             print("That is not a valid option, try again.")
@@ -849,22 +799,10 @@ while not done:
                             print("goddamnit")
                         part = int(input("\nWhich weapon would you like to equip? 0 to cancel."))
                         try:
-                            if part == 1:
-                                weapon_inventory_adjust(0)
+                            try:
+                                weapon_inventory_adjust(part-1)
                                 weapon_attack = equipped[0]["damage"]
-                            elif part == 2:
-                                weapon_inventory_adjust(1)
-                                weapon_attack = equipped[0]["damage"]
-                            elif part == 3:
-                                weapon_inventory_adjust(2)
-                                weapon_attack = equipped[0]["damage"]
-                            elif part == 4:
-                                weapon_inventory_adjust(3)
-                                weapon_attack = equipped[0]["damage"]
-                            elif part == 5:
-                                weapon_inventory_adjust(4)
-                                weapon_attack = equipped[0]["damage"]
-                            else:
+                            except IndexError:
                                 print("That is not a valid option, try again.")
                         except TypeError:
                             print("That is not a valid option, try again.")
