@@ -20,6 +20,8 @@ records_unlocked = False
 first_time = False
 brewing = False
 breakflag = False
+breakcheck = False
+win = False
 #  room format: name + directions + result of an inspection + description + boolean to see if its already inspected +
 #  name of item to append it to the inventory + image
 room_list = []
@@ -38,30 +40,28 @@ lance = {
     "name": "\033[0;31;22mLance of Longinus\033[0m",
     "type": "Hybrid",
     "damage": 25,
-    "image":" \033[0;31;22mx x\033[0m\n"
-            " \033[31;1;22mx x\033[0m\n"
-            " \033[31;1;22mx x\033[0m\n"
-            " \033[31;1;22mx x\033[0m\n"
-            "\033[31;1;22mx   x\033[0m\n"
-            "\033[31;1;22mx   x\033[0m\n"
-            " \033[31;1;4mx x\033[0m\n"
-            "  \033[31;1;4mx\033[0m\n"
-            " \033[31;1;4mx x\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
-            "  \033[31;1;22mx\033[0m\n"
+    "image": " \033[0;31;22mx x\033[0m\n"
+             " \033[31;1;22mx x\033[0m\n"
+             " \033[31;1;22mx x\033[0m\n"
+             " \033[31;1;22mx x\033[0m\n"
+             "\033[31;1;22mx   x\033[0m\n"
+             "\033[31;1;22mx   x\033[0m\n"
+             " \033[31;1;4mx x\033[0m\n"
+             "  \033[31;1;4mx\033[0m\n"
+             " \033[31;1;4mx x\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
+             "  \033[31;1;22mx\033[0m\n"
             }
-#  lance = [25, "Close-Combat"]
-#  learned how to use dicts ezgg
 room = ["CHAPEL", None, None, None, 1, "\nLeaned against the back wall of the Chapel is a giant spear, at least 10 "
                                        "meters tall. Despite its length it's light so you might be able to wield it.",
         "\nThe room looks like a Chapel, candles are lit but the pews are all empty.", False, lance]  # 2
@@ -95,7 +95,6 @@ room = ["SHED", None, 3, None, None, "\nYou found a pair of overalls!\nYou found
         " various tools.",
         False, overalls, chainsaw]  # 4
 
-#  armor stat format: DEF, Type
 room_list.append(room)
 room = ["HALL 2", 1, None, 6, None, "\nAn altar with a book on it.", "\nA hallway.", False]  # 5
 room_list.append(room)
@@ -113,9 +112,10 @@ room = ["HALL 4", 6, None, 10, None, "\nThe walls are plastered with missing per
                                      "catches your eye.", "\nSeems like just another hallway.", False]  # 9
 room_list.append(room)
 room = ["STAIRWELL (FLOOR ONE)", 9, None, 11, None, "\nIt's a large descending staircase. It's made entirely of"
-                                                    "concrete, it's a little ominous..", "It's a staircase.", False]  # 10
+                                                    "concrete, it's a little ominous..", "\nIt's a staircase.", False]  # 10
 room_list.append(room)
-room = ["STAIRWELL EXIT (FLOOR TWO)", 10, 16, 12, None, ""]  # 11
+room = ["STAIRWELL EXIT (FLOOR TWO)", 10, 16, 12, None, "A large concrete staircase. It leads to the first floor.",
+        "It's a staircase.", False]  # 11
 room_list.append(room)
 room = ["BLACKSMITH", 11, 15, 13, None]  # 12
 room_list.append(room)
@@ -123,13 +123,23 @@ room = ["RECORDS ROOM", 12, 14, None, None, "\nLORE"]  # 13
 room_list.append(room)
 room = ["GYM", 15, 19, None, 13]  # 14
 room_list.append(room)
-room = ["HALL 5", 16, 18, 14, 12]  # 15
+room = ["HALL 5", 16, 18, 14, 12, "\nThe walls are plastered with missing person posters. Besides that, nothing "
+                                  "catches your eye.", "\nSeems like just another hallway.", False]  # 15
 room_list.append(room)
-room = ["DWELLING ONE", None, 17, 15, 11]  # 16
+combat_boots = {
+    "name": "Combat Boots",
+    "type": "Bot",
+    "defense": 10,
+    "image": ""
+}
+room = ["DWELLING ONE", None, 17, 15, 11, "\nYou found a pair of combat boots!", "\nIt looks like a barracks, torn up"
+                                                                                 "bunk beds line the walls.", False,
+        combat_boots]  # 16
 room_list.append(room)
 room = ["DWELLING TWO", None, 20, 18, 16]  # 17
 room_list.append(room)
-room = ["HALL 6", 17, 23, 19, 15]  # 18
+room = ["HALL 6", 17, 23, 19, 15, "\nThe walls are plastered with missing person posters. Besides that, nothing "
+                                  "catches your eye.", "\nSeems like just another hallway.", False]  # 18
 room_list.append(room)
 room = ["ARMORY", 9, 11, None, 25]  # 19
 room_list.append(room)
@@ -141,29 +151,33 @@ room = ["VAULT", None, None, 21, None]  # 22
 room_list.append(room)
 room = ["LIBRARY", 20, 31, 24, 18, "\nLORE"]  # 23
 room_list.append(room)
-room = ["HALL 7", 23, None, 25, 19]  # 24
+room = ["HALL 7", 23, None, 25, 19, "\nThe walls are plastered with missing person posters. Besides that, nothing "
+                                    "catches your eye.", "\nSeems like just another hallway.", False]  # 24
 room_list.append(room)
-room = ["HALL 8", 24, None, 26, None]  # 25
+room = ["HALL 8", 24, None, 26, None, "\nThe walls are plastered with missing person posters. Besides that, nothing "
+                                      "catches your eye.", "\nSeems like just another hallway.", False]  # 25
 room_list.append(room)
-room = ["HALL 9", 25, None, 27, None]  # 26
+room = ["HALL 9", 25, None, 27, None, "\nThe walls are plastered with missing person posters. Besides that, nothing "
+                                      "catches your eye.", "\nSeems like just another hallway.", False]  # 26
 room_list.append(room)
-room = ["HALL 10", 26, 29, None, 28]  # 27
+room = ["HALL 10", 26, 29, None, 28, "\nThe walls are plastered with missing person posters. Besides that, nothing "
+                                     "catches your eye.", "\nSeems like just another hallway.", False]  # 27
 room_list.append(room)
 room = ["BREWERY", None, 27, None, None, "\nYou took some of the alcohol, it might prove useful for favors.",
                                          "\nA brewery of some sorts, alcohol and unmarked glass bottles with vibrant "
-                                         "substances adorn the shelves.", False, "Bottle of Whiskey", False]  # 28
+                                         "substances adorn the shelves.", False, "\033[33mBottle of Whiskey\033[0m",
+        False]  # 28
 room_list.append(room)
-room = ["HALL 11", None, 30, None, 27]  # 29
+room = ["HALL 11", None, 30, None, 27, "\nAn altar with a book on it.", "\nA hallway.", False]  # 29
 room_list.append(room)
-room = ["MAZE", None, None, None, 29]  # 30
+room = ["MAZE", None, None, None, 29, "", "\n A labrynth of stone walls. Splashes of blood are everywhere.", False]  # 30
 room_list.append(room)
 room = ["THRONE ROOM", None, None, None, 23]  # 31
 room_list.append(room)
-
-
 current_room = room_list[0]
 next_room = room_list[0]
 #  room config done
+
 inventory = []
 weapons = []
 armor = []
@@ -174,14 +188,24 @@ current_health = 100
 base_health = 100
 base_attack = 10
 weapon_attack = 0
-bonus_attack = 0
+dmg_mult = 1
+crit_chance = 0
+crit_mult = 1.5
+crit_dmg = 0
 base_defense = 10
-armor_defense = 0
-bonus_defense = 0
-stats = [current_health, base_health, base_attack + weapon_attack + bonus_attack, base_defense + armor_defense +
-         bonus_defense, gold]
+top_armor_defense = 0
+mid_armor_defense = 0
+bot_armor_defense = 0
+armor_defense = top_armor_defense + mid_armor_defense + bot_armor_defense
+stats = [current_health, base_health, base_attack + weapon_attack, base_defense + armor_defense, gold]
 save_data = []
 #  equipped order = weapon, top armor, middle armor, bottom armor
+
+#  shop stuff
+#  items: ATK BUFF, DEFENSE BUFF, ALL BUFF, secret upgrade: weapons double damage
+costs = [75, 50, 100, 100]
+#  blacksmith stuff
+b_costs = [150, 50]
 
 
 def died(gold_lost):
@@ -203,9 +227,10 @@ def died(gold_lost):
         current_health = save_data[11]
         if gold > 0:
             gold = gold - gold_lost
-            print("\nYou lost \033[1;33m{}\033[0m gold!")
+            print("\nYou lost \033[1;33m{}\033[0m gold!".format(gold_lost))
         print("You will now be returned to your last save point.")
         breakflag = True
+        return
     except IndexError:
         print("\nYou didn't save your data so you'll have to restart the game. Try utilizing a save room next time!")
         exit()
@@ -314,14 +339,16 @@ monsters = [zombie, bat, dino]
 def damage_taken():
     global current_health
     damage_reduction = int(round(stats[3] * 0.10))
-    enemy_damage = random.randint(monster["attack"] - 3, monster["attack"] + 3) - damage_reduction
+    enemy_damage = random.randint(round(monster["attack"] - monster["attack"] / 10),
+                                  round(monster["attack"] + monster["attack"] / 10)) - damage_reduction
     current_health -= enemy_damage
     print(monster["line"])
-    print("Your armor protected you from {} damage!".format(damage_reduction))
-    print("\nIt did {} damage to you!".format(enemy_damage))
+    print("Your armor protected you from \033[0;32m{}\033[0m damage!".format(damage_reduction))
+    print("\nIt did \033[0;31m{}\033[0m damage to you!".format(enemy_damage))
+
 
 def win_check():  # checks if monster dead
-    global monster_health, fighting, in_battle, defeated, breakcheck
+    global monster_health, fighting, in_battle, defeated, breakcheck, gold
     if monster_health < 1:
         if debuffed:
             stats[2] += def_decrease
@@ -341,7 +368,7 @@ def win_check():  # checks if monster dead
 def death_check():  # checks if user dead
     global debuffed, def_decrease, fighting, dead, in_battle, breakcheck
     if current_health < 1:
-        print("\nYou died!")
+        print("\n\033[0;31mYou died!\033[0m")
         if debuffed:
             stats[2] += def_decrease
         fighting = False
@@ -353,75 +380,87 @@ def death_check():  # checks if user dead
 
 
 def fight(monster):
-    global floor_multiplier, fighting, dead, weapon_attack, current_health, defeated, in_battle, gold, breakcheck
+    global floor_multiplier, fighting, dead, weapon_attack, current_health, defeated, in_battle, gold, breakcheck, stats
+    global part, debuffed, def_decrease, monster_health, counter, executioner, crit_mult, crit_chance, crit_dmg
     in_battle = True
     stun = False
     debuffed = False
     defeated = False
     monster_health = monster["health"]
-    print("\nWhile wandering around, a(n) {} attacked you!".format(monster["name"]))
+    if current_room == room_list[30]:
+        print("\nYou walked into {}'s domain!".format(monster["name"]))
+    else:
+        print("\nWhile wandering around, a(n) {} attacked you!".format(monster["name"]))
     print(monster["image"])
     while in_battle:
         # stat check to update in case swapped weapon mid fight or something
-        stats = [current_health, base_health, base_attack + weapon_attack + bonus_attack, base_defense + armor_defense +
-                 bonus_defense, gold]
+        stats = [current_health, base_health, base_attack + weapon_attack, base_defense + armor_defense, gold]
         death_check()
-        if breakcheck == True:
+        if breakcheck is True:
             breakcheck = False
             break
         win_check()
-        if breakcheck == True:
+        if breakcheck is True:
             breakcheck = False
             break
-        print("\nThe enemy has {} /".format(monster_health), "{} HP!".format(monster["health"]))
-        print("You have {} /".format(current_health), "{} HP!".format(base_health))
+        print("\nThe enemy has {} / {} HP!".format(monster_health, monster["health"]))
+        print("You have {} / {} HP!".format(current_health, base_health))
         print("\n1) ATTACK")
         print("2) ACT")
         print("3) SWITCH WEAPON")
+        # if monster == executioner or monster == "ranged boss":
+        #     print("4) DODGE")
+        #  dont know how to make actual challenging dodge mechanics in a text game so we'll come back to this later
         user_turn = int(input("\nWhat will you do?"))
         if user_turn == 1:
             if equipped[0]["type"] != "Hybrid":
                 if equipped[0]["type"] == monster["type"]:
                     if equipped[0] == flower_weapon:
-                        print("\nYou threw a {} and a".format(random.choice(flower_types)),
-                              "{} at the".format(random.choice(flower_types)), "{}!".format(monster["name"]))
+                        print("\nYou threw a(n) {} and a(n) {} at the {}!".format((random.choice(flower_types)),
+                                                                            (random.choice(flower_types)),
+                                                                            monster["name"]))
                     else:
                         print("\nYou attacked the enemy with the {}!".format(equipped[0]["name"]))
-                    damage = random.randint(stats[2]-3, stats[2]+3)
+                    damage = random.randint(stats[2]-3, stats[2]+3) * dmg_mult
                     monster_health -= damage
-                    print("It did {} damage!".format(damage))
+                    print("\nIt did {} damage!".format(damage))
+                    crit_roll = random.randint(1, 100)
+                    if crit_roll < crit_chance:
+                        crit_dmg = damage * crit_mult
+                        print("You did {} as critical hit damage!".format(crit_dmg))
+                        monster_health -= crit_dmg
                 else:
                     print("\nYou cannot damage this enemy with your current weapon!")
             else:
                 if equipped[0] == flower_weapon:
-                    print("\nYou threw a {} and a".format(random.choice(flower_types)),
-                          "{} at the".format(random.choice(flower_types)), "{}!".format(monster["name"]))
+                    print("\nYou threw a(n) {} and a(n) {} at the {}!".format((random.choice(flower_types)),
+                                                                        (random.choice(flower_types)), monster["name"]))
                 else:
                     print("\nYou attacked the enemy with the {}!".format(equipped[0]["name"]))
-                damage = random.randint(stats[2] - 3, stats[2] + 3)
+                damage = random.randint(round(stats[2] - (stats[2]/10)), round(stats[2] + stats[2]/10))
                 monster_health -= damage
                 print("It did {} damage!".format(damage))
             if not stun:
                 if monster == abyssal_being:
                     if not debuffed:
                         win_check()
-                        if breakcheck == True:
+                        if breakcheck is True:
                             breakcheck = False
                             break
-                        print("\nThe abyssal being taunts you!")
-                        print("Your DEFENSE decreased by 5!")
                         def_decrease = int(round(stats[3] * 0.15))
                         stats[2] -= def_decrease
                         debuffed = True
+                        print("\nThe abyssal being taunts you!")
+                        print("Your DEFENSE decreased by {}!".format(def_decrease))
                     else:
                         win_check()
-                        if breakcheck == True:
+                        if breakcheck is True:
                             breakcheck = False
                             break
                         damage_taken()
                 else:
                     win_check()
-                    if breakcheck == True:
+                    if breakcheck is True:
                         breakcheck = False
                         break
                     damage_taken()
@@ -430,21 +469,21 @@ def fight(monster):
                 stun = False
         elif user_turn == 2:
             print("\nYou tried to reason with the enemy!")
-            if monster["negotiable"] == True:
+            if monster["negotiable"] is True:
                 print("\nThe enemy seems to have faltered for a second, it will not attack next turn!")
                 stun = True
             else:
                 print("The enemy ignored you!")
                 win_check()
-                if breakcheck == True:
+                if breakcheck is True:
                     breakcheck = False
                     break
                 damage_taken()
         elif user_turn == 3:
             counter = 1
             try:
-                for i in range(len(weapons)):
-                    print("{})".format(counter), "{}".format(weapons[counter - 1]["name"]))
+                for w in range(len(weapons)):
+                    print("{}) {}".format(counter, weapons[counter - 1]["name"]))
                     counter += 1
             except TypeError:
                 print("goddamnit")
@@ -461,6 +500,12 @@ def fight(monster):
             print("That is not a valid option, try again.")
 
 
+def win_stats():
+    print("\n", "-" * 10)
+    print("STATS\n")
+    print("just remember your statistics lol")
+
+
 instruct = input("Would you like instructions?")
 if instruct.lower().strip() == "yes" or instruct == "y":
     print("\nIn this game, you find yourself in some sort of underground society and you must find your way out.\n"
@@ -468,6 +513,7 @@ if instruct.lower().strip() == "yes" or instruct == "y":
           "depths.\nGood luck!\n")
 username = input("\nWhat is your name?\n")
 while not done:
+    turn = True
     if breaktest:
         break
     current_room = next_room
@@ -478,7 +524,7 @@ while not done:
         color = "\033[1;33m"
     else:
         color = "\033[1:31m"
-    print(color, "   You have {} /".format(current_health), "{} health.\033[0m".format(base_health))
+    print(color, "\nYou have {} /".format(current_health), "{} health.\033[0m".format(base_health))
     room_index = room_list.index(current_room)
     if room_index == 5 or room_index == 0 or room_index == 7 or room_index == 12 or room_index == 29:
         immune = True
@@ -488,37 +534,93 @@ while not done:
         mob_generator = random.randint(1, 12)
         if mob_generator == 12:
             fighting = True
+            floor = room_list.index(current_room)
+            if floor > 10:
+                floor_multiplier = 1.5
+                monsters.append(abyssal_being)
+            else:
+                floor_multiplier = 1
             monster = random.choice(monsters)
             while fighting:
                 while not dead:
-                    floor = room_list.index(current_room)
-                    if floor > 10:
-                        floor_multiplier = 1.5
-                        monsters.append(abyssal_being)
-                    else:
-                        floor_multiplier = 1
                     fight(monster)
-                    if defeated == True:
+                    if defeated is True:
                         break
-                    if breakflag == True:
+                    if breakflag is True:
                         breakflag = False
                         break
 
-    turn = True
     while turn:
-        if current_room[1] == None:
+        if current_room == room_list[21]:
+            if not win:
+                chariot = {
+                    "name": "The Chariot",
+                    "health": 300,
+                    "attack": 100,
+                    "type": "Ranged",
+                    "line": "The Chariot runs past and jabs you!",
+                    "gold": 500,
+                    "image": ""
+                }
+                monster = chariot
+                fight(chariot)
+                if defeated is True:
+                    break
+                if breakflag is True:
+                    breakflag = False
+                    break
+                if not dead:
+                    print("\nYou defeated the chariot and won the game!")
+                    cont = input("Would you like to keep playing!")
+                    if cont.lower().strip() == "yes" or cont.lower().strip() == "y":
+                        win = True
+                    else:
+                        win_stats()
+                        exit()
+            else:
+                ""
+        if current_room == room_list[30]:
+            if not win:
+                executioner = {
+                    "name": "The Executioner",
+                    "health": 250,
+                    "attack": 40,
+                    "type": "Close Combat",
+                    "line": "The Executioner stabs at you!",
+                    "gold": 100,
+                    "image": ""
+                }
+                monster = executioner
+                fight(executioner)
+                if defeated is True:
+                    break
+                if breakflag is True:
+                    breakflag = False
+                    break
+                if not dead:
+                    print("\nYou defeated the executioner and won the game!")
+                    cont = input("Would you like to keep playing!")
+                    if cont.lower().strip() == "yes" or cont.lower().strip() == "y":
+                        win = True
+                    else:
+                        win_stats()
+                        exit()
+            else:
+                ""
+
+        if current_room[1] is None:
             ncolor = "\033[1:31m"
         else:
             ncolor = "\033[1;32m"
-        if current_room[2] == None:
+        if current_room[2] is None:
             ecolor = "\033[1:31m"
         else:
             ecolor = "\033[1;32m"
-        if current_room[3] == None:
+        if current_room[3] is None:
             scolor = "\033[1:31m"
         else:
             scolor = "\033[1;32m"
-        if current_room[4] == None:
+        if current_room[4] is None:
             wcolor = "\033[1:31m"
         else:
             wcolor = "\033[1;32m"
@@ -526,30 +628,22 @@ while not done:
               "West? \033[0m", "\nNote that you can also inspect the current room by typing F or manage your inventory "
                                "by typing I.")
         action = input("")
-        if current_room == "":
-            print("SPECIFIC INTERACTIONS FOR THE SPEAKABLE NPC'S, BLACKSMITH, SHOP")
-            # WHISKEY CAN LOWER PRICES + GIVE EXTRA LOOT/REP
-        if current_room == room_list[21]:
-            print("SPECIFIC APPEND FOR RANGED BOSS")
-        if current_room == room_list[30]:
-            print("SPECIFIC APPEND FOR EXEC")
-
 
         if action.lower().strip() == "n" or action.lower().strip() == "north":
-            if current_room[1] != None:
+            if current_room[1] is not None:
                 next_room = room_list[current_room[1]]
                 break
             else:
-                print("\nYou cannot go that way.")
+                print("\n\033[0;31mYou cannot go that way!\033[0m")
         elif action.lower().strip() == "e" or action.lower().strip() == "east":
             try:
                 next_room = room_list[current_room[2]]
                 break
             except TypeError:
-                print("\nYou cannot go that way.")
+                print("\n\033[0;31mYou cannot go that way!\033[0m")
         elif action.lower().strip() == "s" or action.lower().strip() == "south":
             if current_room == room_list[10]:
-                if stair_unlocked == False:
+                if stair_unlocked is False:
                     print("The door to the stairwell is locked.")
                     for obj in inventory:
                         if obj == "Key":
@@ -564,13 +658,13 @@ while not done:
                     next_room = room_list[current_room[3]]
                     break
                 except TypeError:
-                    print("\nYou cannot go that way.")
+                    print("\n\033[0;31mYou cannot go that way!\033[0m")
         elif action.lower().strip() == "w" or action.lower().strip() == "west":
             try:
                 next_room = room_list[current_room[4]]
                 break
             except TypeError:
-                print("\nYou cannot go that way.")
+                print("\n\033[0;31mYou cannot go that way!\033[0m")
         elif action.lower().strip() == "q" or action.lower().strip() == "q":
             done = True
             breaktest = True
@@ -579,7 +673,7 @@ while not done:
         elif action.lower().strip() == "f":
             if current_room == room_list[0]:
                 # misc item rooms
-                if current_room[7] == False:
+                if current_room[7] is False:
                     print(current_room[5])
                     try:
                         item = current_room[8]
@@ -596,20 +690,84 @@ while not done:
                 current_health = base_health
             elif current_room == room_list[8]:
                 # SHOP
+                buying = True
                 if first_time:
                     print("secret dialogue")
                     first_time = False
                 if records_unlocked:
                     print("You can't look at him the same after what you read..")
-                    print("shop options")
-                    buy = int(input("What would you like to buy?"))
-                else:
-                    print(current_room[5])
-                    print("shop options")
-                    buy = int(input("What would you like to buy?"))
+                while buying:
+                    print("\n1) ATK BUFF \033[1;33m{:16}g\033[0m".format(costs[0]))
+                    print("2) DEF BUFF \033[1;33m{:16}g\033[0m".format(costs[1]))
+                    print("3) HP UPGRADE \033[1;33m{:14}g\033[0m".format(costs[2]))
+                    if records_unlocked:
+                        print("4) WEAPON DAMAGE DOUBLED \033[1;33m{:2}g\033[0m".format(costs[3]))
+                        print("5) BRIBE")
+                    else:
+                        print("4) BRIBE")
+                    buy = int(input("\nWhat would you like to buy? 0 to leave."))
+                    if buy == 1:
+                        if gold > costs[0]:
+                            gold -= costs[0]
+                            print("\nYour base attack has been increased by 5!")
+                            base_attack += 5
+                            costs[0] *= 2
+                        else:
+                            print("\nYou cannot afford that!")
+                    elif buy == 2:
+                        if gold > costs[1]:
+                            gold -= costs[1]
+                            print("\nYour base defense has been increased by 5!")
+                            base_defense += 5
+                            costs[1] *= 2
+                        else:
+                            print("\nYou cannot afford that!")
+                    elif buy == 3:
+                        if gold > costs[2]:
+                            gold -= costs[2]
+                            print("\nYour base health has been increased by 20!")
+                            base_health += 20
+                            costs[2] *= 2
+                        else:
+                            print("\nYou cannot afford that!")
+                    elif buy == 4:
+                        if records_unlocked:
+                            if gold > costs[3]:
+                                gold -= costs[3]
+                                print("\nThe damage you deal with weapons is now doubled!")
+                                dmg_mult *= 2
+                                costs[3] *= 2
+                            else:
+                                print("\nYou cannot afford that!")
+                        else:
+                            try:
+                                whiskey = inventory.index("Bottle of Whiskey")
+                                print("\nYou gave him the bottle of whiskey!")
+                                print("All prices are now 20% lower!")
+                                for cost in costs:
+                                    costs[cost] = round(costs[cost] * 0.80)
+                            except IndexError:
+                                print("\nYou have nothing to bribe him with right now.")
+                    elif buy == 5:
+                        if records_unlocked:
+                            try:
+                                whiskey = inventory.index("Bottle of Whiskey")
+                                print("\nYou gave him the bottle of whiskey!")
+                                print("All prices are now 20% lower!")
+                                for cost in costs:
+                                    costs[cost] = round(costs[cost] * 0.80)
+                            except IndexError:
+                                print("\nYou have nothing to bribe him with right now.")
+                        else:
+                            print("That is not a valid option, try again.")
+                    elif buy == 0:
+                        buying = False
+                        break
+                    else:
+                        print("That is not a valid option, try again.")
             elif current_room == room_list[2] or current_room == room_list[3] or current_room == room_list[19]:
                 # weapon rooms
-                if current_room[7] == False:
+                if current_room[7] is False:
                     print(current_room[5])
                     current_room[7] = True
                     try:
@@ -631,9 +789,67 @@ while not done:
                         print("'{}' has been added to your inventory!".format(item))
                 else:
                     print("\nNothing new since last inspection.")
+            elif current_room == room_list[12]:
+                print("\nA blacksmith hammers away at red-hot metal on an anvil.")
+                print("\nBLACKSMITH OPTIONS:\n")
+                print("1) CRITICAL HIT CHANCE \033[1;33m{:13}g\033[0m".format(b_costs[0]))
+                print("2) REINFORCE ARMOR \033[1;33m{:16}g\033[0m".format(b_costs[1]))
+                print("3) CRAFT")
+                smith = int(input("\nWhat would you like to do? 0 to cancel."))
+                if smith == 1:
+                    if gold > b_costs[0]:
+                        gold -= b_costs[0]
+                        if crit_chance < 100:
+                            crit_chance += 20
+                            print("\nYou now have a {}% chance to do CRITICAL damage to enemies!".format(crit_chance))
+                            b_costs[0] *= 2
+                        else:
+                            crit_mult + 0.5
+                            print("\nYour critical effects now do more damage!")
+                            b_costs[0] *= 2
+                    else:
+                        print("\nYou cannot afford that!")
+                elif smith == 2:
+                    pcounter = 0
+                    counter = [1, 2, 3, 4, 5, 6, 7]
+                    print("")
+                    for u in armor:
+                        print("{}) {}".format(counter[pcounter], u["name"]))
+                        pcounter += 1
+                    upgrade = print("\nWhich piece of armor would you like to reinforce?")
+                    try:
+                        equipped[upgrade+1]["defense"] += 10
+                        gold -= b_costs[1]
+                    except IndexError:
+                        print("\nThat is not a valid option, try again.")
+                    except TypeError:
+                        print("\nYou have no armor to upgrade.")
+                elif smith == 3:
+                    print("\n1) FLOWER CROWN")
+                    print("   * Requires spare flowers.")
+                    craft = int(input("\nWhat would you like to craft?"))
+                    if craft == 1:
+                        try:
+                            ingredient = inventory.index("Spare Flowers")
+                            inventory.pop(ingredient)
+                            print("\nYou crafted a flower crown!\n")
+                            flower_crown = {
+                                "name": "\033[1;35mFlower Crown\033[0m",
+                                "type": "Top",
+                                "defense": 5,
+                                "image": ""
+                            }
+                            print("{} has been added to your inventory!".format(flower_crown["name"]))
+                            armor.append(flower_crown)
+                        except ValueError:
+                            print("\nYou do not have the required materials.")
+                elif smith == 0:
+                    ""
+                else:
+                    print("That is not a valid option!")
             elif current_room == room_list[4]:
                 # SPECIFIC SITUATION FOR ROOM THAT HAS ARMOR AND WEAPON
-                if current_room[7] == False:
+                if current_room[7] is False:
                     print(current_room[5])
                     weapon = current_room[9]
                     weapons.append(weapon)
@@ -663,7 +879,7 @@ while not done:
                     print("\n Nothing new since last inspection.")
             elif current_room == room_list[16] or current_room == room_list[17]:
                 # armor rooms
-                if current_room[7] == False:
+                if current_room[7] is False:
                     print(current_room[5])
                     piece = current_room[8]
                     armor.append(piece)
@@ -682,13 +898,13 @@ while not done:
                     library_unlocked = True
             elif current_room == room_list[28]:
                 # BREWERY PUZZLE ROOM
-                if current_room[7] == False:
+                if current_room[7] is False:
                     print(current_room[5])
                     item = current_room[8]
                     inventory.append(item)
                     print("'{}' has been added to your inventory!".format(item))
                     current_room[7] = True
-                if current_room[9] == False:
+                if current_room[9] is False:
                     bottles = [5, 4, 3, 2, 1]
                     user_bottles = [1, 2, 3, 4, 5]
                     brewing = True
@@ -726,7 +942,7 @@ while not done:
                 save_data = [current_room, stats, inventory, weapons, armor, equipped, stair_unlocked, brewing_unlocked,
                              records_unlocked, first_time, library_unlocked, current_health]
             elif current_room == room_list[10]:
-                if stair_unlocked == True:
+                if stair_unlocked is True:
                     print(current_room[5])
                 else:
                     print("You need to unlock it to go further.")
@@ -735,9 +951,7 @@ while not done:
         elif action.lower().strip() == "i":
             organizing = True
             while organizing:
-                stats = [current_health, base_health, base_attack + weapon_attack + bonus_attack,
-                         base_defense + armor_defense +
-                         bonus_defense, gold]
+                stats = [current_health, base_health, base_attack + weapon_attack, base_defense + armor_defense, gold]
                 if current_health > 70:
                     color = "\033[1;32m"
                 elif current_health > 40:
@@ -808,41 +1022,47 @@ while not done:
                             print("That is not a valid option, try again.")
                     elif piece.strip() == "2" or piece == "3" or piece == "4":
                         organizing = False
+                        pcounter = 0
                         for i in armor:
-                            pcounter = 0
                             counter = [1, 2, 3, 4, 5, 6, 7]
                             try:
-                                print("{})".format(counter[pcounter]), "{}".format(i["name"]))
+                                print("{}) {}".format(counter[pcounter], i["name"]))
                             except TypeError:
                                 print("")
                             pcounter += 1
-                            if pcounter >= 1:
-                                part = int(input("\nWhich piece of armor would you like to equip? 0 to cancel."))
-                                part_shift = part-1
-                                if armor[part_shift]["type"] == "Top":
-                                    armor_id = 1
-                                elif armor[part_shift]["type"] == "Mid":
-                                    armor_id = 2
-                                elif armor[part_shift]["type"] == "Bot":
-                                    armor_id = 3
-                                else:
-                                    print("That is not a valid option, try again.")
+                        if pcounter >= 1:
+                            part = int(input("\nWhich piece of armor would you like to equip? 0 to cancel."))
+                            part_shift = part-1
+                            if armor[part_shift]["type"] == "Top":
+                                armor_id = 1
+                            elif armor[part_shift]["type"] == "Mid":
+                                armor_id = 2
+                            elif armor[part_shift]["type"] == "Bot":
+                                armor_id = 3
                             else:
-                                print("You have no armor to equip.")
-                                organizing = False
-                                break
-                            try:
-                                armor_inventory_adjust(int(part_shift))
-                                armor_defense = armor[part - 1]["defense"]
-                                # kept getting errors even though it was working so i just commented it out lol
-                            except TypeError:
-                                ""
-                                # print("That is not a valid option, try again.")
-                                # print("4")
-                            else:
-                                print("")
+                                print("That is not a valid option, try again.")
+                        else:
+                            print("You have no armor to equip.")
+                            organizing = False
+                            break
+                        try:
+                            armor_inventory_adjust(int(part_shift))
+                            top_armor_defense = equipped[1]["defense"]
+                        except TypeError:
+                            ""
+                        try:
+                            mid_armor_defense = equipped[2]["defense"]
+                        except TypeError:
+                            ""
+                        try:
+                            bot_armor_defense = equipped[3]["defense"]
+                        except TypeError:
+                            armor_defense = top_armor_defense + mid_armor_defense + bot_armor_defense
+                        else:
+                            ""
+                        armor_defense = top_armor_defense + mid_armor_defense + bot_armor_defense
                 else:
                     organizing = False
         else:
             print("That is not a valid option, try again.")
-print("Thank you for playing!")
+print("\nThank you for playing!")
