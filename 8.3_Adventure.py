@@ -119,15 +119,17 @@ room = ["STAIRWELL EXIT (FLOOR TWO)", 10, 16, 12, None, "A large concrete stairc
 room_list.append(room)
 room = ["BLACKSMITH", 11, 15, 13, None]  # 12
 room_list.append(room)
-room = ["RECORDS ROOM", 12, 14, None, None, "\nLORE"]  # 13
+room = ["RECORDS ROOM", 12, 14, None, None, "\nLORE", False]  # 13
 room_list.append(room)
-room = ["GYM", 15, 19, None, 13]  # 14
+
+room = ["GYM", 15, 19, None, 13, "\nA decently stocked gym. ALl equipment is made of concrete and looks to be "
+                                 "on the verge of disintegration."]  # 14
 room_list.append(room)
 room = ["HALL 5", 16, 18, 14, 12, "\nThe walls are plastered with missing person posters. Besides that, nothing "
                                   "catches your eye.", "\nSeems like just another hallway.", False]  # 15
 room_list.append(room)
 combat_boots = {
-    "name": "Combat Boots",
+    "name": "\033[1;37mCombat Boots\033[0m",
     "type": "Bot",
     "defense": 10,
     "image": ""
@@ -136,18 +138,47 @@ room = ["DWELLING ONE", None, 17, 15, 11, "\nYou found a pair of combat boots!",
                                                                                  "bunk beds line the walls.", False,
         combat_boots]  # 16
 room_list.append(room)
-room = ["DWELLING TWO", None, 20, 18, 16]  # 17
+armored_pair = {
+    "name": "\033[1;36mArmored Tunic and Leggings\033[0m",
+    "type": "Mid",
+    "defense": 25,
+    "image": ""
+}
+room = ["DWELLING TWO", None, 20, 18, 16, "\nYou found an armored tunic and leggings!", "\nIt looks like a barracks, "
+                                                                                        "torn up bunk beds line the "
+                                                                                        "walls.", False,
+        armored_pair]  # 17
 room_list.append(room)
 room = ["HALL 6", 17, 23, 19, 15, "\nThe walls are plastered with missing person posters. Besides that, nothing "
                                   "catches your eye.", "\nSeems like just another hallway.", False]  # 18
 room_list.append(room)
-room = ["ARMORY", 9, 11, None, 25]  # 19
+spartan_helmet = {
+    "name": "\033[1;33mSpartan Helmet\033[0m",
+    "type": "Top",
+    "defense": 20,
+    "image": ""
+}
+desert_eagle = {
+    "name": "\033[0;37mDesert Eagle\033[0m",
+    "type": "Ranged",
+    "damage": 40,
+    "image": ""
+}
+shield = {
+    "name": "\033[0;33mShield\033[0m",
+    "type": "Mid",
+    "defense": 30,
+    "image": ""
+}
+room = ["ARMORY", 9, 11, None, 25, "you found", "armory", False, spartan_helmet, desert_eagle, shield]  # 19
 room_list.append(room)
-room = ["STAIRWELL TO COLOSSEUM", 21, None, 10, 24]  # 20
+room = ["STAIRWELL TO COLOSSEUM", 21, None, 10, 24, "A large concrete staircase. It leads to the first floor.",
+        "It's a staircase.", False]  # 20
 room_list.append(room)
-room = ["COLOSSEUM", 22, None, 20, None]  # 21
+room = ["COLOSSEUM", 22, None, 20, None, "\nA massive colosseum, though it's far from mint condition.", "\nA massive "
+        "colosseum, though it's far from mint condition.", False]  # 21
 room_list.append(room)
-room = ["VAULT", None, None, 21, None]  # 22
+room = ["VAULT", None, None, 21, None, "\nwow you won the game", "\nwow you won the game", False]  # 22
 room_list.append(room)
 room = ["LIBRARY", 20, 31, 24, 18, "\nLORE"]  # 23
 room_list.append(room)
@@ -172,7 +203,27 @@ room = ["HALL 11", None, 30, None, 27, "\nAn altar with a book on it.", "\nA hal
 room_list.append(room)
 room = ["MAZE", None, None, None, 29, "", "\n A labrynth of stone walls. Splashes of blood are everywhere.", False]  # 30
 room_list.append(room)
-room = ["THRONE ROOM", None, None, None, 23]  # 31
+crown = {
+    "name": "\033[1;33mCrown\033[0m",
+    "type": "Top",
+    "defense": 25,
+    "image": ""
+}
+robe = {
+    "name": "\033[0;31mKing's Shawl\033[0m",
+    "type": "Mid",
+    "defense": 15,
+    "image": ""
+}
+chemical_device = {
+    "name": "\033[0;37mChemical Device\033[0m",
+    "type": "Ranged",
+    "damage": 45,
+    "image": ""
+}
+room = ["THRONE ROOM", None, None, None, 23, "\nAn empty throne.", "\nThe throne is empty, there's a bottle of strange"
+                                                                   "chemicals next to what looks like a vent.", False,
+        crown, robe, chemical_device]  # 31
 room_list.append(room)
 current_room = room_list[0]
 next_room = room_list[0]
@@ -688,6 +739,15 @@ while not done:
                 print(current_room[5])
                 print(current_room[6])
                 current_health = base_health
+            elif current_room == room_list[14]:
+                print(current_room[5])
+                if current_room[7] == False:
+                    print("\nYou trained for a while!")
+                    print("Your base attack increased by 10.")
+                    base_attack += 10
+                    current_room[7] = False
+                else:
+                    print("\nYour muscles are too tired to keep going.")
             elif current_room == room_list[8]:
                 # SHOP
                 buying = True
@@ -816,7 +876,7 @@ while not done:
                     for u in armor:
                         print("{}) {}".format(counter[pcounter], u["name"]))
                         pcounter += 1
-                    upgrade = print("\nWhich piece of armor would you like to reinforce?")
+                    upgrade = int(input("\nWhich piece of armor would you like to reinforce?"))
                     try:
                         equipped[upgrade+1]["defense"] += 10
                         gold -= b_costs[1]
@@ -847,7 +907,7 @@ while not done:
                     ""
                 else:
                     print("That is not a valid option!")
-            elif current_room == room_list[4]:
+            elif current_room == room_list[4] or current_room == room_list[19] or current_room == room_list[31]:
                 # SPECIFIC SITUATION FOR ROOM THAT HAS ARMOR AND WEAPON
                 if current_room[7] is False:
                     print(current_room[5])
@@ -858,6 +918,7 @@ while not done:
                         print(weapon["image"])
                     except KeyError:
                         print("")
+
                     # if not weapons:
                     #     equipped[0] = weapon
                     #     print("'{}' has been automatically equipped.".format(weapon))
@@ -868,6 +929,16 @@ while not done:
                     try:
                         print(piece["image"])
                     except KeyError:
+                        print("")
+                    try:
+                        piece = current_room[10]
+                        armor.append(piece)
+                        print("{} has been added to your inventory!".format(piece["name"]))
+                        try:
+                            print(piece["image"])
+                        except KeyError:
+                            print("")
+                    except IndexError:
                         print("")
                     # if not armor:
                     #     equipped[1] = piece
